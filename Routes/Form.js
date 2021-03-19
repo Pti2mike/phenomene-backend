@@ -41,4 +41,21 @@ router.get("/all-forms", async (req, res) => {
   }
 });
 
+// DELETE un form
+
+router.delete("/delete-form/:id", async (req, res) => {
+  // console.log("delete", req.params.id);
+
+  try {
+    const formToDelete = await Form.findById(req.params.id);
+    console.log(formToDelete);
+
+    await formToDelete.delete();
+
+    res.status(200).json("Form has been deleted successfully");
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
 module.exports = router;
