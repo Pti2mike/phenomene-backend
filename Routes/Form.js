@@ -51,8 +51,10 @@ router.get("/all-forms", async (req, res) => {
 router.post("/update-evolution", async (req, res) => {
   try {
     const formToUpdate = await Form.findById(req.fields.id);
+    // console.log(formToUpdate);
 
     let evolutionToUpdate = await Evolution.findById(formToUpdate.evolution);
+    // console.log(evolutionToUpdate);
 
     evolutionToUpdate.apparation = req.fields.appartionDate;
     evolutionToUpdate.unchanged = req.fields.unchangedDate;
