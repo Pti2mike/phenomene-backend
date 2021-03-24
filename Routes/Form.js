@@ -25,8 +25,6 @@ router.post("/add-form", async (req, res) => {
       evolutions: [newEvolution._id],
     });
 
-    //console.log(newForm); ==> { _id: 60536da07d73d53738f0875a, pheno: 'hello', territoire: 'baba' }
-
     await newForm.save();
     await newEvolution.save();
     const form = await Form.find().populate("evolutions");
@@ -62,7 +60,7 @@ router.post("/update-evolution", async (req, res) => {
     let evolutionToUpdate = await Evolution.findById(
       formToUpdate.evolutions[0]
     );
-    console.log(evolutionToUpdate.disappear);
+    console.log(evolutionToUpdate);
 
     // si l'input est différent de null
     if (evolutionToUpdate.apparation === null) {

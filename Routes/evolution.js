@@ -8,25 +8,43 @@ const Evolution = require("../Models/Evolution");
 
 // Create une Evolution
 
-router.post("/add-evolution", async (req, res) => {
-  try {
-    let newEvolution = await new Evolution({
-      apparation: req.fields.apparation,
-      unchanged: req.fields.unchanged,
-      title1: req.fields.title1,
-      title2: req.fields.title2,
-      aggravation: req.fields.aggravation,
-      disappear: req.fields.disappear,
-      title3: req.fields.title3,
-      title4: req.fields.title4,
-    });
-    console.log(newEvolution);
+router.post("/add-evolution/:id", async (req, res) => {
+  let idPhenomen = req.params.id;
+  if (idPhenomen) {
+    try {
+      // Récupérer le form par son id
+      const phenomen = await Form.findById(idPhenomen);
+      // si le form existe
+      if (phenomen) {
+        let newEvolution = await new Evolution({
+          apparation: req.fields.apparation,
+          unchanged: req.fields.unchanged,
+          title1: req.fields.title1,
+          title2: req.fields.title2,
+          aggravation: req.fields.aggravation,
+          disappear: req.fields.disappear,
+          title3: req.fields.title3,
+          title4: req.fields.title4,
+        });
+        console.log(newEvolution);
 
-    await newEvolution.save();
+        // Sauvegarde de la new evolution
+        await newEvolution.save();
 
-    res.status(200).json({ resultat: newEvolution });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+        // Ajout de newEvolution dans le form
+        phenomen.evolutions.push(newEvolution);
+        // Sauvegarde du form
+        await phenomen.save();
+
+        res.status(200).json({ resultat: newEvolution });
+      } else {
+        res.status(404).json({ error: "Phenomen not found" });
+      }
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  } else {
+    res.status(400).json({ error: "Missing id param" });
   }
 });
 
