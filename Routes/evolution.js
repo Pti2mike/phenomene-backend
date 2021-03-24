@@ -17,12 +17,12 @@ router.post("/add-evolution/:id", async (req, res) => {
       // si le form existe
       if (phenomen) {
         let newEvolution = await new Evolution({
-          apparation: req.fields.apparation,
-          unchanged: req.fields.unchanged,
+          apparation: req.fields.appartionDate,
+          unchanged: req.fields.unchangedDate,
           title1: req.fields.title1,
           title2: req.fields.title2,
-          aggravation: req.fields.aggravation,
-          disappear: req.fields.disappear,
+          aggravation: req.fields.aggravationDate,
+          disappear: req.fields.disappearDate,
           title3: req.fields.title3,
           title4: req.fields.title4,
         });
