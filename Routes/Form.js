@@ -11,7 +11,7 @@ const Evolution = require("../Models/Evolution");
 router.post("/add-form", async (req, res) => {
   // Ajouter un form
   try {
-    let newEvolution = await new Evolution();
+    // let newEvolution = await new Evolution();
 
     let newForm = await new Form({
       pheno: req.fields.pheno,
@@ -22,12 +22,13 @@ router.post("/add-form", async (req, res) => {
       mobility: req.fields.mobility,
       checkUp: req.fields.checkUp,
       precision: req.fields.precision,
-      evolutions: [newEvolution._id],
+      // evolutions: [newEvolution._id],
     });
 
     await newForm.save();
-    await newEvolution.save();
-    const form = await Form.find().populate("evolutions");
+    // await newEvolution.save();
+    // const form = await Form.find().populate("evolutions");
+    const form = await Form.find();
 
     res.status(200).json({ resultat: form });
   } catch (error) {
