@@ -48,6 +48,60 @@ router.post("/add-evolution/:id", async (req, res) => {
   }
 });
 
+// UPDATE une evolution
+
+router.post("/form/:idForm/update-evolution/:idEvolution", async (req, res) => {
+  // console.log(`update ${req.params.idForm} ${req.params.idEvolution} `);
+
+  let { idForm, idEvolution } = req.params;
+
+  if (idForm && idEvolution) {
+    try {
+      // Récupère le form suivant son id
+      let formToUpdate = await Form.findById(idForm);
+
+      // Récupère l'evolution suivant son id
+      let evolutionToUpdate = await Evolution.findById(idEvolution);
+
+      if (formToUpdate && evolutionToUpdate) {
+        if (req.fields.appartionDate) {
+          evolutionToUpdate.apparation = req.fields.appartionDate;
+        }
+        if (req.fields.unchangedDate) {
+          evolutionToUpdate.unchanged = req.fields.unchangedDate;
+        }
+        if (req.fields.aggravationDate) {
+          evolutionToUpdate.aggravation = req.fields.aggravationDate;
+        }
+        if (req.fields.disappearedDate) {
+          evolutionToUpdate.disappear = req.fields.disappearedDate;
+        }
+        if (req.fields.title1) {
+          evolutionToUpdate.title1 = req.fields.title1;
+        }
+        if (req.fields.title2) {
+          evolutionToUpdate.title2 = req.fields.title2;
+        }
+        if (req.fields.title3) {
+          evolutionToUpdate.title3 = req.fields.title3;
+        }
+        if (req.fields.title4) {
+          evolutionToUpdate.title4 = req.fields.title4;
+        }
+      }
+      // console.log(`evolutionToUpdate ${evolutionToUpdate}`);
+
+      await evolutionToUpdate.save();
+
+      res.status(200).json({ resultat: evolutionToUpdate });
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  } else {
+    res.status(400).json({ error: "Missing id param" });
+  }
+});
+
 // Suppression d'une evolution
 
 router.delete(
