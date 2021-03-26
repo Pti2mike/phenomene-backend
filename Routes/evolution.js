@@ -55,25 +55,32 @@ router.delete(
   async (req, res) => {
     // console.log(`response ${req.params.idForm} ${req.params.idEvolution}`);
 
-    try {
-      // Récupère le form suivant son id
-      let form = await Form.findById(req.params.idForm);
+    let { idForm, idEvolution } = req.params;
 
-      // Récupère l'evolution suivant son id
-      let evolution = await Evolution.findById(req.params.idEvolution);
-      if (form && evolution) {
-        // pull() method is used to remove an element from collection by given key and return the pulled element
-        await form.evolutions.pull({ _id: req.params.idEvolution });
-        // Sauvegarde du tableau
-        await form.save();
-        // Mise à jour de la DB Evolution en supprimant l'evolution
-        await Evolution.findOneAndDelete({ _id: req.params.idEvolution });
+    if (idForm && idEvolution) {
+      try {
+        // Récupère le form suivant son id
+        let form = await Form.findById(idForm);
 
-        res.status(200).json({ resultat: form });
-      } else {
-        res.status(404).json({ error: "Not found" });
+        // Récupère l'evolution suivant son id
+        let evolution = await Evolution.findById(idEvolution);
+
+        if (form && evolution) {
+          // pull() method is used to remove an element from collection by given key and return the pulled element
+          await form.evolutions.pull({ _id: idEvolution });
+          // Sauvegarde du tableau
+          await form.save();
+          // Mise à jour de la DB Evolution en supprimant l'evolution
+          await Evolution.findOneAndDelete({ _id: idEvolution });
+
+          res.status(200).json({ message: "Deleted", resultat: form });
+        } else {
+          res.status(404).json({ error: "Not found" });
+        }
+      } catch (error) {
+        res.status(500).json({ error: error });
       }
-    } catch (error) {
+    } else {
       res.status(400).json({ error: "Missing id param" });
     }
   }
