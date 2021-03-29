@@ -65,8 +65,8 @@ router.post("/update-evolution", async (req, res) => {
 
     // si l'input est différent de null
     if (evolutionToUpdate.apparation === null) {
-      // alors on récupère la valeur de req.fields.appartionDate
-      evolutionToUpdate.apparation = req.fields.appartionDate;
+      // alors on récupère la valeur de req.fields.apparitionDate
+      evolutionToUpdate.apparation = req.fields.apparitionDate;
     } else {
       // si non, la valeur reste inchangée même si tentative de modif
       evolutionToUpdate.apparation;
@@ -114,7 +114,7 @@ router.post("/update-evolution", async (req, res) => {
       evolutionToUpdate.title4;
     }
 
-    // evolutionToUpdate.apparation = req.fields.appartionDate;
+    // evolutionToUpdate.apparation = req.fields.apparitionDate;
     // evolutionToUpdate.unchanged = req.fields.unchangedDate;
     // evolutionToUpdate.title1 = req.fields.title1;
     // evolutionToUpdate.title2 = req.fields.title2;

@@ -17,7 +17,7 @@ router.post("/add-evolution/:id", async (req, res) => {
       // si le form existe
       if (phenomen) {
         let newEvolution = await new Evolution({
-          apparation: req.fields.appartionDate,
+          apparation: req.fields.apparitionDate,
           unchanged: req.fields.unchangedDate,
           title1: req.fields.title1,
           title2: req.fields.title2,
@@ -50,7 +50,7 @@ router.post("/add-evolution/:id", async (req, res) => {
 
 // UPDATE une evolution
 
-router.post("/form/:idForm/update-evolution/:idEvolution", async (req, res) => {
+router.put("/form/:idForm/update-evolution/:idEvolution", async (req, res) => {
   // console.log(`update ${req.params.idForm} ${req.params.idEvolution} `);
 
   let { idForm, idEvolution } = req.params;
@@ -64,8 +64,8 @@ router.post("/form/:idForm/update-evolution/:idEvolution", async (req, res) => {
       let evolutionToUpdate = await Evolution.findById(idEvolution);
 
       if (formToUpdate && evolutionToUpdate) {
-        if (req.fields.appartionDate) {
-          evolutionToUpdate.apparation = req.fields.appartionDate;
+        if (req.fields.apparitionDate) {
+          evolutionToUpdate.apparation = req.fields.apparitionDate;
         }
         if (req.fields.unchangedDate) {
           evolutionToUpdate.unchanged = req.fields.unchangedDate;
