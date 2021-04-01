@@ -3,7 +3,7 @@ const router = express.Router();
 
 // import des models
 
-const Form = require("../Models/Form");
+const Phenomenon = require("../Models/Phenomenon");
 const Evolution = require("../Models/Evolution");
 
 // Create une Evolution
@@ -13,18 +13,17 @@ router.post("/add-evolution/:id", async (req, res) => {
   if (idPhenomen) {
     try {
       // Récupérer le form par son id
-      const phenomen = await Form.findById(idPhenomen);
+      const phenomen = await Phenomenon.findById(idPhenomen);
       // si le form existe
       if (phenomen) {
         let newEvolution = await new Evolution({
-          apparation: req.fields.apparitionDate,
-          unchanged: req.fields.unchangedDate,
-          title1: req.fields.title1,
-          title2: req.fields.title2,
-          aggravation: req.fields.aggravationDate,
-          disappear: req.fields.disappearedDate,
-          title3: req.fields.title3,
-          title4: req.fields.title4,
+          name: req.fields.name,
+          majorated: req.fields.majorated,
+          date: req.fields.date,
+          douleur: req.fields.douleur,
+          mobility: req.fields.mobility,
+          checkUp: req.fields.checkUp,
+          precision: req.fields.precision,
         });
         console.log(newEvolution);
 
@@ -50,84 +49,89 @@ router.post("/add-evolution/:id", async (req, res) => {
 
 // UPDATE une evolution
 
-router.put("/form/:idForm/update-evolution/:idEvolution", async (req, res) => {
-  // console.log(`update ${req.params.idForm} ${req.params.idEvolution} `);
+router.put(
+  "/phenomenon/:idPhenomenon/update-evolution/:idEvolution",
+  async (req, res) => {
+    // console.log(`update ${req.params.idPhenomenon} ${req.params.idEvolution} `);
 
-  let { idForm, idEvolution } = req.params;
+    let { idPhenomenon, idEvolution } = req.params;
 
-  if (idForm && idEvolution) {
-    try {
-      // Récupère le form suivant son id
-      let formToUpdate = await Form.findById(idForm);
+    if (idPhenomenon && idEvolution) {
+      try {
+        // Récupère le phenomenon suivant son id
+        let phenomenonToUpdate = await Phenomenon.findById(idPhenomenon);
 
-      // Récupère l'evolution suivant son id
-      let evolutionToUpdate = await Evolution.findById(idEvolution);
+        // Récupère l'evolution suivant son id
+        let evolutionToUpdate = await Evolution.findById(idEvolution);
 
-      if (formToUpdate && evolutionToUpdate) {
-        if (req.fields.apparitionDate) {
-          evolutionToUpdate.apparation = req.fields.apparitionDate;
+        if (phenomenonToUpdate && evolutionToUpdate) {
+          if (req.fields.evolType) {
+            evolutionToUpdate.name = req.fields.evolType;
+          }
+          if (req.fields.evolMajorated) {
+            evolutionToUpdate.majorated = req.fields.evolMajorated;
+          }
+          if (req.fields.evolDate) {
+            evolutionToUpdate.date = req.fields.evolDate;
+          }
+          if (req.fields.evolDouleur) {
+            evolutionToUpdate.douleur = req.fields.evolDouleur;
+          }
+          if (req.fields.evolMobility) {
+            evolutionToUpdate.mobility = req.fields.evolMobility;
+          }
+          if (req.fields.evolCheckUp) {
+            evolutionToUpdate.checkUp = req.fields.evolCheckUp;
+          }
+          if (req.fields.evolPrecision) {
+            evolutionToUpdate.precision = req.fields.evolPrecision;
+          }
         }
-        if (req.fields.unchangedDate) {
-          evolutionToUpdate.unchanged = req.fields.unchangedDate;
-        }
-        if (req.fields.aggravationDate) {
-          evolutionToUpdate.aggravation = req.fields.aggravationDate;
-        }
-        if (req.fields.disappearedDate) {
-          evolutionToUpdate.disappear = req.fields.disappearedDate;
-        }
-        if (req.fields.title1) {
-          evolutionToUpdate.title1 = req.fields.title1;
-        }
-        if (req.fields.title2) {
-          evolutionToUpdate.title2 = req.fields.title2;
-        }
-        if (req.fields.title3) {
-          evolutionToUpdate.title3 = req.fields.title3;
-        }
-        if (req.fields.title4) {
-          evolutionToUpdate.title4 = req.fields.title4;
-        }
+        // console.log(`evolutionToUpdate ${evolutionToUpdate}`);
+
+        await evolutionToUpdate.save();
+
+        res.status(200).json({ resultat: evolutionToUpdate });
+      } catch (error) {
+        res.status(400).json({ error: error.message });
       }
-      // console.log(`evolutionToUpdate ${evolutionToUpdate}`);
-
-      await evolutionToUpdate.save();
-
-      res.status(200).json({ resultat: evolutionToUpdate });
-    } catch (error) {
-      res.status(400).json({ error: error.message });
+    } else {
+      res.status(400).json({ error: "Missing id param" });
     }
-  } else {
-    res.status(400).json({ error: "Missing id param" });
   }
-});
+);
 
 // Suppression d'une evolution
 
 router.delete(
-  "/form/:idForm/delete-evolution/:idEvolution",
+  "/phenomenon/:idPhenomemon/delete-evolution/:idEvolution",
   async (req, res) => {
-    // console.log(`response ${req.params.idForm} ${req.params.idEvolution}`);
+    // console.log(
+    //   `response ${req.params.idPhenomemon} ${req.params.idEvolution}`
+    // );
 
-    let { idForm, idEvolution } = req.params;
+    let { idPhenomemon, idEvolution } = req.params;
 
-    if (idForm && idEvolution) {
+    if (idPhenomemon && idEvolution) {
       try {
-        // Récupère le form suivant son id
-        let form = await Form.findById(idForm);
+        // Récupère le phenomenon suivant son id
+        let phenomenon = await Phenomenon.findById(idPhenomemon);
 
         // Récupère l'evolution suivant son id
         let evolution = await Evolution.findById(idEvolution);
 
-        if (form && evolution) {
+        // console.log(`Phenomenon --> ${phenomenon}`);
+        // console.log(`Evolution --> ${evolution}`);
+
+        if (phenomenon && evolution) {
           // pull() method is used to remove an element from collection by given key and return the pulled element
-          await form.evolutions.pull({ _id: idEvolution });
+          await phenomenon.evolutions.pull({ _id: idEvolution });
           // Sauvegarde du tableau
-          await form.save();
+          await phenomenon.save();
           // Mise à jour de la DB Evolution en supprimant l'evolution
           await Evolution.findOneAndDelete({ _id: idEvolution });
 
-          res.status(200).json({ message: "Deleted", resultat: form });
+          res.status(200).json({ message: "Deleted", resultat: phenomenon });
         } else {
           res.status(404).json({ error: "Not found" });
         }

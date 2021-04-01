@@ -1,30 +1,41 @@
 const mongoose = require("mongoose");
 
 const Evolution = mongoose.model("Evolution", {
-  apparation: {
+  name: {
+    type: String,
+    require: true,
+    default: "",
+  },
+  majorated: {
+    type: String,
+    require: true,
+    default: "",
+  },
+  date: {
     type: Date,
     require: true,
     default: "",
   },
-  unchanged: {
-    type: Date,
+  douleur: {
+    type: Number,
+    require: true,
+    default: 1,
+  },
+  mobility: {
+    type: String,
     require: true,
     default: "",
   },
-  title1: { type: String, require: true, default: "" },
-  title2: { type: String, require: true, default: "" },
-  aggravation: {
-    type: Date,
+  checkUp: {
+    type: String,
     require: true,
     default: "",
   },
-  disappear: {
-    type: Date,
+  precision: {
+    type: String,
     require: true,
     default: "",
   },
-  title3: { type: String, require: true, default: "" },
-  title4: { type: String, require: true, default: "" },
 });
 
 module.exports = Evolution;

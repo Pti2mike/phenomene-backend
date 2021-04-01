@@ -1,15 +1,15 @@
 const mongoose = require("mongoose");
 
-const Form = mongoose.model("Form", {
+const Phenomenon = mongoose.model("Form", {
   pheno: String,
   territoire: String,
-  majoré: String,
+  majorated: String,
   date: Date,
-  douleur: String,
+  douleur: Number,
   mobility: String,
   checkUp: String,
   precision: String,
   evolutions: [{ type: mongoose.Schema.Types.ObjectId, ref: "Evolution" }],
 });
 
-module.exports = Form;
+module.exports = Phenomenon;

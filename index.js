@@ -17,8 +17,8 @@ mongoose.connect("mongodb://localhost/test-phenomenes", {
 
 // import des routes
 
-const formRoute = require("./Routes/form");
-app.use(formRoute);
+const phenomenonRoute = require("./Routes/phenomenon");
+app.use(phenomenonRoute);
 
 const evolutionRoute = require("./Routes/evolution");
 app.use(evolutionRoute);

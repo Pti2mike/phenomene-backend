@@ -3,49 +3,45 @@ const router = express.Router();
 
 // import des models
 
-const Form = require("../Models/Form");
+const Phenomenon = require("../Models/Phenomenon");
 const Evolution = require("../Models/Evolution");
 
-// Create un Form
+// Create un Phenomenon
 
-router.post("/add-form", async (req, res) => {
-  // Ajouter un form
+router.post("/add-phenomenon", async (req, res) => {
+  // Ajouter un Phenomenon
   try {
-    // let newEvolution = await new Evolution();
-
-    let newForm = await new Form({
+    let newPhenomenon = await new Phenomenon({
       pheno: req.fields.pheno,
       territoire: req.fields.territoire,
-      majoré: req.fields.majoré,
+      majorated: req.fields.majorated,
       date: req.fields.date,
-      douleur: req.fields.douleur,
+      douleur: req.fields.pain,
       mobility: req.fields.mobility,
       checkUp: req.fields.checkUp,
       precision: req.fields.precision,
-      // evolutions: [newEvolution._id],
     });
 
-    await newForm.save();
-    // await newEvolution.save();
-    // const form = await Form.find().populate("evolutions");
-    const form = await Form.find();
+    await newPhenomenon.save();
 
-    res.status(200).json({ resultat: form });
+    const phenomenon = await Phenomenon.find();
+
+    res.status(200).json({ resultat: phenomenon });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 });
 
-// GET la liste des forms
+// READ la liste des Phenomenons
 
-router.get("/all-forms", async (req, res) => {
+router.get("/all-phenomenons", async (req, res) => {
   try {
-    const form = await Form.find().populate("evolutions");
+    const phenomenons = await Phenomenon.find().populate("evolutions");
 
     // Verification si un objet existe
 
     // Si oui
-    res.status(200).json({ form });
+    res.status(200).json({ phenomenons });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -55,11 +51,11 @@ router.get("/all-forms", async (req, res) => {
 
 router.post("/update-evolution", async (req, res) => {
   try {
-    const formToUpdate = await Form.findById(req.fields.id);
+    const PhenomenonToUpdate = await Phenomenon.findById(req.fields.id);
     // console.log(formToUpdate);
 
     let evolutionToUpdate = await Evolution.findById(
-      formToUpdate.evolutions[0]
+      PhenomenonToUpdate.evolutions[0]
     );
     console.log(evolutionToUpdate);
 
@@ -114,45 +110,51 @@ router.post("/update-evolution", async (req, res) => {
       evolutionToUpdate.title4;
     }
 
-    // evolutionToUpdate.apparation = req.fields.apparitionDate;
-    // evolutionToUpdate.unchanged = req.fields.unchangedDate;
-    // evolutionToUpdate.title1 = req.fields.title1;
-    // evolutionToUpdate.title2 = req.fields.title2;
-    // evolutionToUpdate.aggravation = req.fields.aggravationDate;
-    // evolutionToUpdate.disappear = req.fields.disappearedDate;
-    // evolutionToUpdate.title3 = req.fields.title3;
-    // evolutionToUpdate.title4 = req.fields.title4;
-
     await evolutionToUpdate.save();
-    const form = await Form.find().populate("evolutions");
+    const phenomenon = await Phenomenon.find().populate("evolutions");
 
-    res.status(200).json({ resultat: form });
+    res.status(200).json({ resultat: phenomenon });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 });
 
-// DELETE un form
+// DELETE un phenomenon
 
-router.post("/delete-form", async (req, res) => {
-  console.log("delete", req.fields.id);
+router.delete("/delete-phenomenon/:id", async (req, res) => {
+  const phenomenonId = req.params.id;
+  console.log("delete", phenomenonId);
 
-  try {
-    const evolutionsToDelete = [];
-    const formToDelete = await Form.findById(req.fields.id);
-    for (i = 0; i < formToDelete.evolutions.length; i++) {
-      evolutionToDelete = await Evolution.findById(formToDelete.evolutions[i]);
-      evolutionsToDelete.push(evolutionToDelete);
+  if (phenomenonId) {
+    try {
+      //   const evolutionsToDelete = [];
+      let phenomenonToDelete = await Phenomenon.findById(phenomenonId);
+
+      console.log(phenomenonToDelete);
+
+      // A REVOIR
+
+      let evolutionsToDelete = await Evolution.find();
+
+      console.log(`A supprimer ---> ${evolutionsToDelete}`);
+      //   for (i = 0; i < phenomenonToDelete.evolutions.length; i++) {
+      //     evolutionToDelete = await Evolution.findById(
+      //       phenomenonToDelete.evolutions[i]
+      //     );
+      //     evolutionsToDelete.push(evolutionToDelete);
+      //   }
+
+      //   for (i = 0; i < evolutionsToDelete.length; i++)
+      //     await evolutionsToDelete[i].delete();
+      //   await phenomenonToDelete.delete();
+      //   const phenomenon = await Phenomenon.find().populate("evolutions");
+
+      //   res.status(200).json({ message: "Deleted", resultat: phenomenon });
+    } catch (error) {
+      res.status(400).json({ error: error.message });
     }
-
-    for (i = 0; i < evolutionsToDelete.length; i++)
-      await evolutionsToDelete[i].delete();
-    await formToDelete.delete();
-    const form = await Form.find().populate("evolutions");
-
-    res.status(200).json({ message: "Deleted", resultat: form });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+  } else {
+    res.status(400).json({ error: "Missing id param" });
   }
 });
 
