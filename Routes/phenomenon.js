@@ -14,9 +14,9 @@ router.post("/add-phenomenon", async (req, res) => {
     let newPhenomenon = await new Phenomenon({
       pheno: req.fields.pheno,
       territoire: req.fields.territoire,
-      majorated: req.fields.majorated,
+      majorated: req.fields.majore,
       date: req.fields.date,
-      douleur: req.fields.pain,
+      douleur: req.fields.douleur,
       mobility: req.fields.mobility,
       checkUp: req.fields.checkUp,
       precision: req.fields.precision,
@@ -128,15 +128,28 @@ router.delete("/delete-phenomenon/:id", async (req, res) => {
   if (phenomenonId) {
     try {
       //   const evolutionsToDelete = [];
-      let phenomenonToDelete = await Phenomenon.findById(phenomenonId);
+      let phenomenonToDelete = await Phenomenon.findById(phenomenonId).populate(
+        "evolutions"
+      );
 
       console.log(phenomenonToDelete);
 
       // A REVOIR
-
-      let evolutionsToDelete = await Evolution.find();
+      // si ...
+      let evolutionsToDelete = phenomenonToDelete;
 
       console.log(`A supprimer ---> ${evolutionsToDelete}`);
+
+      // Modifier l'objet phenomene.evolutions = []
+
+      // Save DB
+
+      // Mapper sur evolutionToDelete -> suppr chaque evolution
+
+      // Save
+
+      // Retourner le pheno suppr ou son id
+
       //   for (i = 0; i < phenomenonToDelete.evolutions.length; i++) {
       //     evolutionToDelete = await Evolution.findById(
       //       phenomenonToDelete.evolutions[i]

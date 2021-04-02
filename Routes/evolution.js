@@ -18,7 +18,7 @@ router.post("/add-evolution/:id", async (req, res) => {
       if (phenomen) {
         let newEvolution = await new Evolution({
           name: req.fields.name,
-          majorated: req.fields.majorated,
+          majorated: req.fields.majore,
           date: req.fields.date,
           douleur: req.fields.douleur,
           mobility: req.fields.mobility,
@@ -68,8 +68,8 @@ router.put(
           if (req.fields.evolType) {
             evolutionToUpdate.name = req.fields.evolType;
           }
-          if (req.fields.evolMajorated) {
-            evolutionToUpdate.majorated = req.fields.evolMajorated;
+          if (req.fields.evolMajore) {
+            evolutionToUpdate.majorated = req.fields.evolMajore;
           }
           if (req.fields.evolDate) {
             evolutionToUpdate.date = req.fields.evolDate;
