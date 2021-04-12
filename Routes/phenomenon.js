@@ -127,7 +127,6 @@ router.delete("/delete-phenomenon/:id", async (req, res) => {
 
   if (phenomenonId) {
     try {
-      //   const evolutionsToDelete = [];
       let phenomenonToDelete = await Phenomenon.findById(phenomenonId).populate(
         "evolutions"
       );
@@ -136,38 +135,20 @@ router.delete("/delete-phenomenon/:id", async (req, res) => {
 
       // A REVOIR
       // si ...
-      let evolutionsToDelete = phenomenonToDelete;
+      if (phenomenonToDelete) {
+        await phenomenonToDelete.remove();
 
-      console.log(`A supprimer ---> ${evolutionsToDelete}`);
+        await phenomenonToDelete.save();
+      } else {
+        res.status(400).json({ message: "Phénomène not found" });
+      }
 
-      // Modifier l'objet phenomene.evolutions = []
-
-      // Save DB
-
-      // Mapper sur evolutionToDelete -> suppr chaque evolution
-
-      // Save
-
-      // Retourner le pheno suppr ou son id
-
-      //   for (i = 0; i < phenomenonToDelete.evolutions.length; i++) {
-      //     evolutionToDelete = await Evolution.findById(
-      //       phenomenonToDelete.evolutions[i]
-      //     );
-      //     evolutionsToDelete.push(evolutionToDelete);
-      //   }
-
-      //   for (i = 0; i < evolutionsToDelete.length; i++)
-      //     await evolutionsToDelete[i].delete();
-      //   await phenomenonToDelete.delete();
-      //   const phenomenon = await Phenomenon.find().populate("evolutions");
-
-      //   res.status(200).json({ message: "Deleted", resultat: phenomenon });
+      res.status(200).json({ message: "Deleted", resultat: phenomenonId });
     } catch (error) {
-      res.status(400).json({ error: error.message });
+      res.status(400).json({ message: "Erreur", error: error.message });
     }
   } else {
-    res.status(400).json({ error: "Missing id param" });
+    res.status(400).json({ message: "Missing id param" });
   }
 });
 

@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const Evolution = mongoose.model("Evolution", {
-  name: {
+  type: {
     type: String,
     require: true,
     default: "",

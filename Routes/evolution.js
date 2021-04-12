@@ -17,13 +17,13 @@ router.post("/add-evolution/:id", async (req, res) => {
       // si le form existe
       if (phenomen) {
         let newEvolution = await new Evolution({
-          name: req.fields.name,
-          majorated: req.fields.majore,
-          date: req.fields.date,
-          douleur: req.fields.douleur,
-          mobility: req.fields.mobility,
-          checkUp: req.fields.checkUp,
-          precision: req.fields.precision,
+          type: req.fields.evolType,
+          majorated: req.fields.evolMajore,
+          date: req.fields.evolDate,
+          douleur: req.fields.evolDouleur,
+          mobility: req.fields.evolMobility,
+          checkUp: req.fields.evolCheckUp,
+          precision: req.fields.evolPrecision,
         });
         console.log(newEvolution);
 
@@ -37,13 +37,13 @@ router.post("/add-evolution/:id", async (req, res) => {
 
         res.status(200).json({ resultat: newEvolution });
       } else {
-        res.status(404).json({ error: "Phenomen not found" });
+        res.status(404).json({ message: "Phenomen not found" });
       }
     } catch (error) {
       res.status(400).json({ error: error.message });
     }
   } else {
-    res.status(400).json({ error: "Missing id param" });
+    res.status(400).json({ message: "Missing id param" });
   }
 });
 
@@ -66,7 +66,7 @@ router.put(
 
         if (phenomenonToUpdate && evolutionToUpdate) {
           if (req.fields.evolType) {
-            evolutionToUpdate.name = req.fields.evolType;
+            evolutionToUpdate.type = req.fields.evolType;
           }
           if (req.fields.evolMajore) {
             evolutionToUpdate.majorated = req.fields.evolMajore;
@@ -91,12 +91,16 @@ router.put(
 
         await evolutionToUpdate.save();
 
-        res.status(200).json({ resultat: evolutionToUpdate });
+        let pheno = await Phenomenon.findById(idPhenomenon).populate(
+          "evolutions"
+        );
+
+        res.status(200).json({ resultat: pheno });
       } catch (error) {
         res.status(400).json({ error: error.message });
       }
     } else {
-      res.status(400).json({ error: "Missing id param" });
+      res.status(400).json({ message: "Missing id param" });
     }
   }
 );
@@ -133,13 +137,13 @@ router.delete(
 
           res.status(200).json({ message: "Deleted", resultat: phenomenon });
         } else {
-          res.status(404).json({ error: "Not found" });
+          res.status(404).json({ message: "Not found" });
         }
       } catch (error) {
         res.status(500).json({ error: error });
       }
     } else {
-      res.status(400).json({ error: "Missing id param" });
+      res.status(400).json({ message: "Missing id param" });
     }
   }
 );
